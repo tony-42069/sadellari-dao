@@ -1,0 +1,22 @@
+# Agent Role-Specific Strategies
+# This directory contains private implementations of role-specific agent strategies
+
+# CEO Strategy Files:
+# - strategic-planning.ts
+# - resource-allocation.ts
+# - organizational-direction.ts
+
+# CFO Strategy Files:
+# - financial-management.ts
+# - treasury-operations.ts
+# - investment-strategy.ts
+
+# CTO Strategy Files:
+# - technical-architecture.ts
+# - innovation-management.ts
+# - system-optimization.ts
+
+# CLO Strategy Files:
+# - legal-compliance.ts
+# - risk-management.ts
+# - regulatory-monitoring.ts

@@ -1,0 +1,25 @@
+# Common Agent Behaviors
+# This directory contains private implementations of shared agent behaviors
+
+# Core Behaviors:
+# - message-handling.ts
+# - proposal-voting.ts
+# - collaboration.ts
+# - learning.ts
+
+# Governance Behaviors:
+# - consensus-building.ts
+# - conflict-resolution.ts
+# - decision-validation.ts
+
+# Operational Behaviors:
+# - task-management.ts
+# - resource-optimization.ts
+# - performance-monitoring.ts
+
+# Security Behaviors:
+# - access-control.ts
+# - audit-logging.ts
+# - threat-detection.ts
+
+Note: These behaviors are combined and customized for each agent role while maintaining consistent base functionality across the DAO.

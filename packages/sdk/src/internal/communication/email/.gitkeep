@@ -1,0 +1,38 @@
+# Email Communication System
+# This directory contains private implementations of email communication
+
+# Core Components:
+# - email-client.ts (Email service wrapper)
+# - template-engine.ts (Email template management)
+# - attachment-handler.ts (File handling)
+# - scheduler.ts (Scheduled emails)
+
+# Features:
+# - Daily/weekly reports
+# - Critical alerts
+# - Governance notifications
+# - Stakeholder communications
+# - Multi-part messages
+# - HTML/Text formatting
+# - Attachment support
+
+# Templates:
+# - governance-templates/
+#   - proposal-notification.ts
+#   - voting-results.ts
+#   - execution-confirmation.ts
+# - report-templates/
+#   - daily-summary.ts
+#   - weekly-metrics.ts
+#   - monthly-review.ts
+# - alert-templates/
+#   - critical-alert.ts
+#   - system-notification.ts
+#   - security-alert.ts
+
+# Security:
+# - DKIM signing
+# - SPF validation
+# - DMARC compliance
+# - Content scanning
+# - Rate limiting

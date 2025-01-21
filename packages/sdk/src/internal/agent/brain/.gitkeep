@@ -1,0 +1,7 @@
+# AI Decision Making Logic
+# This directory contains private implementations of agent decision-making processes
+# Implementation files:
+# - decision-engine.ts
+# - context-analyzer.ts
+# - risk-evaluator.ts
+# - learning-system.ts

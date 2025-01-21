@@ -1,0 +1,24 @@
+# Slack Integration Implementation
+# This directory contains private implementations of Slack communication
+
+# Core Components:
+# - client.ts (Slack API client wrapper)
+# - message-handler.ts (Message processing)
+# - command-parser.ts (Slash command handling)
+# - event-handler.ts (Slack events)
+
+# Features:
+# - Direct messaging with agents
+# - Command system (/ask, /propose, /status)
+# - Thread-based discussions
+# - Real-time notifications
+# - Reaction handling
+# - File sharing
+
+# Security:
+# - Authentication
+# - Rate limiting
+# - Message validation
+# - Permission checks
+
+Note: Integration uses Slack's Socket Mode for real-time communication

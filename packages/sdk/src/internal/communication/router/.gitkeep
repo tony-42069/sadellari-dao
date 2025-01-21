@@ -1,0 +1,39 @@
+# Message Router Implementation
+# This directory contains private implementations of the message routing system
+
+# Core Components:
+# - router.ts (Main message routing logic)
+# - channel-manager.ts (Channel handling)
+# - queue-manager.ts (Message queuing)
+# - delivery-tracker.ts (Message delivery status)
+
+# Features:
+# - Cross-channel routing
+# - Priority-based handling
+# - Message transformation
+# - Delivery guarantees
+# - Error recovery
+# - Load balancing
+
+# Channel Handlers:
+# - slack-handler.ts
+# - email-handler.ts
+# - internal-handler.ts
+
+# Queue Management:
+# - priority-queue.ts
+# - dead-letter-queue.ts
+# - retry-mechanism.ts
+
+# Monitoring:
+# - metrics-collector.ts
+# - performance-tracker.ts
+# - health-checker.ts
+
+# Security:
+# - message-validation.ts
+# - rate-limiter.ts
+# - access-controller.ts
+# - encryption-handler.ts
+
+Note: Implements the pub/sub pattern for efficient message distribution
