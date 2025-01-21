@@ -111,6 +111,4 @@ export interface DecisionImpact {
   };
 }
 
-// Export everything
-export * from './agent-factory';
-export * from './agent-registry';
+// Note: Implementation details will be in separate files

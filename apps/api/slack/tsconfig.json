@@ -1,12 +1,15 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
     "composite": true,
     "declarationMap": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@sadellari-dao/sdk/*": ["../../../packages/sdk/src/*"]
     }
   },
   "include": ["src/**/*"],
@@ -16,5 +19,10 @@
     "**/*.test.ts",
     "**/*.spec.ts",
     "**/internal/**/*"
+  ],
+  "references": [
+    {
+      "path": "../../../packages/sdk"
+    }
   ]
 }
