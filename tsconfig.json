@@ -17,6 +17,7 @@
     "declaration": true,
     "sourceMap": true,
     "baseUrl": ".",
+    "rootDir": ".",
     "paths": {
       "@sadellari-dao/sdk/*": ["packages/sdk/src/*"],
       "@sadellari-dao/utils/*": ["packages/utils/src/*"]
@@ -30,9 +31,12 @@
     "**/strategies", // Exclude private strategies
     "**/core"        // Exclude private core implementations
   ],
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": [
+    "packages/*/src/**/*",
+    "apps/*/src/**/*"
+  ],
   "references": [
-    { "path": "./packages/sdk" },
-    { "path": "./apps/api/slack" }
+    { "path": "packages/sdk" },
+    { "path": "apps/api/slack" }
   ]
 }

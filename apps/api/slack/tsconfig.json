@@ -6,12 +6,7 @@
     "composite": true,
     "declarationMap": true,
     "module": "commonjs",
-    "moduleResolution": "node",
-    "baseUrl": "../..",
-    "paths": {
-      "@/*": ["./src/*"],
-      "@sadellari-dao/sdk/*": ["packages/sdk/src/*"]
-    }
+    "moduleResolution": "node"
   },
   "include": ["src/**/*"],
   "exclude": [
@@ -20,7 +15,7 @@
   ],
   "references": [
     {
-      "path": "../../packages/sdk"
+      "path": "../../../packages/sdk"
     }
   ]
 }
