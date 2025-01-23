@@ -28,8 +28,7 @@
     "**/.turbo",
     "**/brain",      // Exclude private agent logic
     "**/strategies", // Exclude private strategies
-    "**/core",       // Exclude private core implementations
-    "**/internal"    // Exclude private SDK internals
+    "**/core"        // Exclude private core implementations
   ],
   "include": ["**/*.ts", "**/*.tsx"],
   "references": [
