@@ -1,5 +1,5 @@
-import { SlackMessageRouter } from '../../../../packages/sdk/src/internal/communication/router';
-import { SlackMessage, Channel } from '../../../../packages/sdk/src/types/communication';
+import { SlackMessageRouter } from '@sadellari-dao/sdk/internal/communication/router';
+import { SlackMessage, Channel } from '@sadellari-dao/sdk/types/communication';
 
 describe('SlackMessageRouter', () => {
   let router: SlackMessageRouter;

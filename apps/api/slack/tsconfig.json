@@ -7,9 +7,10 @@
     "declarationMap": true,
     "module": "commonjs",
     "moduleResolution": "node",
+    "baseUrl": "../..",
     "paths": {
       "@/*": ["./src/*"],
-      "@sadellari-dao/sdk/*": ["../../../packages/sdk/src/*"]
+      "@sadellari-dao/sdk/*": ["packages/sdk/src/*"]
     }
   },
   "include": ["src/**/*"],
@@ -19,7 +20,7 @@
   ],
   "references": [
     {
-      "path": "../../../packages/sdk"
+      "path": "../../packages/sdk"
     }
   ]
 }

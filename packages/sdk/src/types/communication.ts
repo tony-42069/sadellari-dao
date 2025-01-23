@@ -67,6 +67,13 @@ export interface EmailMessage extends Message {
       contentType: string;
     }>;
   };
+}
+
+/**
+ * Message routing interface
+ */
+export interface MessageRouter {
+  /**
    * Send a message through the appropriate channel
    */
   send(message: Message): Promise<void>;
