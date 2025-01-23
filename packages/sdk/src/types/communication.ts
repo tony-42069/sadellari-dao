@@ -59,14 +59,14 @@ export interface EmailMessage extends Message {
     subject: string;
     cc?: string[];
     bcc?: string[];
+    templateId?: string;
+    templateData?: Record<string, string>;
+    attachments?: Array<{
+      filename: string;
+      content: string;
+      contentType: string;
+    }>;
   };
-}
-
-/**
- * Message routing interface
- */
-export interface MessageRouter {
-  /**
    * Send a message through the appropriate channel
    */
   send(message: Message): Promise<void>;
