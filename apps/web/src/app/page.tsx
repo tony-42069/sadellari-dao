@@ -2,6 +2,7 @@
 
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import Link from 'next/link';
 
 export default function Home() {
   const { connected } = useWallet();
@@ -30,8 +31,12 @@ export default function Home() {
               Governance
             </h2>
             <div className="space-y-4">
-              <button className="btn btn-primary w-full">Create Proposal</button>
-              <button className="btn btn-secondary w-full">View Proposals</button>
+              <Link href="/governance" className="btn btn-primary w-full block text-center">
+                Create Proposal
+              </Link>
+              <Link href="/governance" className="btn btn-secondary w-full block text-center">
+                View Proposals
+              </Link>
             </div>
           </div>
 
@@ -40,8 +45,12 @@ export default function Home() {
               Treasury
             </h2>
             <div className="space-y-4">
-              <button className="btn btn-primary w-full">View Balance</button>
-              <button className="btn btn-secondary w-full">Transaction History</button>
+              <Link href="/treasury" className="btn btn-primary w-full block text-center">
+                View Balance
+              </Link>
+              <Link href="/treasury/transactions" className="btn btn-secondary w-full block text-center">
+                Transaction History
+              </Link>
             </div>
           </div>
 
@@ -50,8 +59,12 @@ export default function Home() {
               Token Distribution
             </h2>
             <div className="space-y-4">
-              <button className="btn btn-primary w-full">Claim Tokens</button>
-              <button className="btn btn-secondary w-full">View Distribution</button>
+              <Link href="/distribution/claim" className="btn btn-primary w-full block text-center">
+                Claim Tokens
+              </Link>
+              <Link href="/distribution" className="btn btn-secondary w-full block text-center">
+                View Distribution
+              </Link>
             </div>
           </div>
         </div>
