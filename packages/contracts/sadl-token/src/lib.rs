@@ -3,16 +3,52 @@ use anchor_spl::token::{self, Mint, Token as SplToken, TokenAccount};
 
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
+// Constants for rate limiting and supply caps
+pub const MAX_SUPPLY: u64 = 1_000_000_000 * 10u64.pow(9); // 1 billion tokens with 9 decimals
+pub const MAX_DISTRIBUTION_RATE: u64 = MAX_SUPPLY / 100; // 1% of total supply per distribution
+pub const DISTRIBUTION_COOLDOWN: i64 = 3600; // 1 hour cooldown between distributions
+
 #[program]
 pub mod sadl_token {
     use super::*;
 
+    // Events
+    #[event]
+    pub struct TokenInitialized {
+        pub supply: u64,
+        pub authority: Pubkey,
+        pub timestamp: i64,
+    }
+
+    #[event]
+    pub struct Distribution {
+        pub pool_type: PoolType,
+        pub amount: u64,
+        pub recipient: Pubkey,
+        pub timestamp: i64,
+    }
+
+    #[event]
+    pub struct EmergencyAction {
+        pub action_type: EmergencyActionType,
+        pub initiator: Pubkey,
+        pub timestamp: i64,
+    }
+
     pub fn initialize(ctx: Context<Initialize>, config: TokenConfig) -> Result<()> {
+        require!(
+            config.supply <= MAX_SUPPLY,
+            DistributionError::SupplyCapExceeded
+        );
+
         let token = &mut ctx.accounts.token;
         token.supply = config.supply;
         token.decimals = config.decimals;
         token.authority = config.authority;
+        token.emergency_admin = config.authority; // Initially same as authority
         token.total_distributed = 0;
+        token.paused = false;
+        token.last_distribution = 0;
         token.distribution_pools = DistributionPools {
             community: Pool {
                 allocation: (config.supply * 30) / 100,  // 30%
@@ -60,11 +96,33 @@ pub mod sadl_token {
             config.supply,
         )?;
 
+        // Emit initialization event
+        emit!(TokenInitialized {
+            supply: config.supply,
+            authority: config.authority,
+            timestamp: Clock::get()?.unix_timestamp,
+        });
+
         Ok(())
     }
 
     pub fn distribute(ctx: Context<Distribute>, pool_type: PoolType, amount: u64) -> Result<()> {
         let token = &mut ctx.accounts.token;
+        
+        // Check if contract is paused
+        require!(!token.paused, DistributionError::ContractPaused);
+
+        // Rate limiting checks
+        let current_time = Clock::get()?.unix_timestamp;
+        require!(
+            current_time >= token.last_distribution + DISTRIBUTION_COOLDOWN,
+            DistributionError::CooldownNotElapsed
+        );
+        require!(
+            amount <= MAX_DISTRIBUTION_RATE,
+            DistributionError::RateLimitExceeded
+        );
+
         let pool = token.distribution_pools.get_pool_mut(pool_type);
 
         // Validate distribution
@@ -73,12 +131,12 @@ pub mod sadl_token {
             DistributionError::ExceedsAllocation
         );
         require!(
-            Clock::get()?.unix_timestamp >= pool.start_time,
+            current_time >= pool.start_time,
             DistributionError::DistributionNotStarted
         );
         if let Some(end_time) = pool.end_time {
             require!(
-                Clock::get()?.unix_timestamp <= end_time,
+                current_time <= end_time,
                 DistributionError::DistributionEnded
             );
         }
@@ -86,6 +144,7 @@ pub mod sadl_token {
         // Update distribution state
         pool.distributed += amount;
         token.total_distributed += amount;
+        token.last_distribution = current_time;
 
         // Transfer tokens
         token::transfer(
@@ -101,10 +160,21 @@ pub mod sadl_token {
             amount,
         )?;
 
+        // Emit distribution event
+        emit!(Distribution {
+            pool_type,
+            amount,
+            recipient: ctx.accounts.recipient.key(),
+            timestamp: current_time,
+        });
+
         Ok(())
     }
 
     pub fn transfer(ctx: Context<Transfer>, amount: u64) -> Result<()> {
+        let token = &ctx.accounts.token;
+        require!(!token.paused, DistributionError::ContractPaused);
+
         token::transfer(
             CpiContext::new(
                 ctx.accounts.token_program.to_account_info(),
@@ -120,6 +190,9 @@ pub mod sadl_token {
     }
 
     pub fn delegate(ctx: Context<Delegate>, amount: u64) -> Result<()> {
+        let token = &ctx.accounts.token;
+        require!(!token.paused, DistributionError::ContractPaused);
+
         token::approve(
             CpiContext::new(
                 ctx.accounts.token_program.to_account_info(),
@@ -131,6 +204,60 @@ pub mod sadl_token {
             ),
             amount,
         )?;
+        Ok(())
+    }
+
+    pub fn pause(ctx: Context<EmergencyAction>) -> Result<()> {
+        let token = &mut ctx.accounts.token;
+        require!(
+            ctx.accounts.admin.key() == token.emergency_admin,
+            DistributionError::Unauthorized
+        );
+        
+        token.paused = true;
+
+        emit!(EmergencyAction {
+            action_type: EmergencyActionType::Pause,
+            initiator: ctx.accounts.admin.key(),
+            timestamp: Clock::get()?.unix_timestamp,
+        });
+
+        Ok(())
+    }
+
+    pub fn unpause(ctx: Context<EmergencyAction>) -> Result<()> {
+        let token = &mut ctx.accounts.token;
+        require!(
+            ctx.accounts.admin.key() == token.emergency_admin,
+            DistributionError::Unauthorized
+        );
+        
+        token.paused = false;
+
+        emit!(EmergencyAction {
+            action_type: EmergencyActionType::Unpause,
+            initiator: ctx.accounts.admin.key(),
+            timestamp: Clock::get()?.unix_timestamp,
+        });
+
+        Ok(())
+    }
+
+    pub fn update_emergency_admin(ctx: Context<EmergencyAction>, new_admin: Pubkey) -> Result<()> {
+        let token = &mut ctx.accounts.token;
+        require!(
+            ctx.accounts.admin.key() == token.emergency_admin,
+            DistributionError::Unauthorized
+        );
+        
+        token.emergency_admin = new_admin;
+
+        emit!(EmergencyAction {
+            action_type: EmergencyActionType::UpdateAdmin,
+            initiator: ctx.accounts.admin.key(),
+            timestamp: Clock::get()?.unix_timestamp,
+        });
+
         Ok(())
     }
 }
@@ -164,6 +291,8 @@ pub struct Distribute<'info> {
 #[derive(Accounts)]
 pub struct Transfer<'info> {
     #[account(mut)]
+    pub token: Account<'info, Token>,
+    #[account(mut)]
     pub from: Account<'info, TokenAccount>,
     #[account(mut)]
     pub to: Account<'info, TokenAccount>,
@@ -174,10 +303,19 @@ pub struct Transfer<'info> {
 #[derive(Accounts)]
 pub struct Delegate<'info> {
     #[account(mut)]
+    pub token: Account<'info, Token>,
+    #[account(mut)]
     pub delegate_account: Account<'info, TokenAccount>,
     pub delegate: AccountInfo<'info>,
     pub authority: Signer<'info>,
     pub token_program: Program<'info, SplToken>,
+}
+
+#[derive(Accounts)]
+pub struct EmergencyAction<'info> {
+    #[account(mut)]
+    pub token: Account<'info, Token>,
+    pub admin: Signer<'info>,
 }
 
 #[account]
@@ -188,10 +326,22 @@ pub struct Token {
     pub bump: u8,
     pub total_distributed: u64,
     pub distribution_pools: DistributionPools,
+    pub paused: bool,
+    pub last_distribution: i64,
+    pub emergency_admin: Pubkey,
 }
 
 impl Token {
-    pub const LEN: usize = 8 + 1 + 32 + 1 + 8 + DistributionPools::LEN;
+    pub const LEN: usize = 8 + // discriminator
+        8 + // supply
+        1 + // decimals
+        32 + // authority
+        1 + // bump
+        8 + // total_distributed
+        DistributionPools::LEN +
+        1 + // paused
+        8 + // last_distribution
+        32; // emergency_admin
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone)]
@@ -229,7 +379,7 @@ impl Pool {
     pub const LEN: usize = 8 + 8 + 8 + 9;
 }
 
-#[derive(AnchorSerialize, AnchorDeserialize)]
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy)]
 pub enum PoolType {
     Community,
     Development,
@@ -246,6 +396,13 @@ pub struct TokenConfig {
     pub distribution_start: i64,
 }
 
+#[derive(AnchorSerialize, AnchorDeserialize)]
+pub enum EmergencyActionType {
+    Pause,
+    Unpause,
+    UpdateAdmin,
+}
+
 #[error_code]
 pub enum DistributionError {
     #[msg("Distribution amount exceeds pool allocation")]
@@ -254,4 +411,14 @@ pub enum DistributionError {
     DistributionNotStarted,
     #[msg("Distribution period has ended")]
     DistributionEnded,
+    #[msg("Contract is paused")]
+    ContractPaused,
+    #[msg("Distribution rate limit exceeded")]
+    RateLimitExceeded,
+    #[msg("Distribution cooldown period not elapsed")]
+    CooldownNotElapsed,
+    #[msg("Supply cap exceeded")]
+    SupplyCapExceeded,
+    #[msg("Unauthorized")]
+    Unauthorized,
 }
