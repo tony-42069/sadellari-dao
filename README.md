@@ -3,11 +3,10 @@ ____    _    ____  _____ _     _        _    ____  ___    ____    _    ___
 \___ \ / _ \ | | | |  _| | |   | |     / _ \ | |_) || |   | | | |/ _ \| | | |
  ___) / ___ \| |_| | |___| |___| |___ / ___ \|  _ < | |   | |_| / ___ \ |_| |
 |____/_/   \_\____/|_____|_____|_____/_/   \_\_| \_\___|  |____/_/   \_\___/ 
-```
 
 # Sadellari DAO
 
-A next-generation DAO built on Solana with AI-driven governance and multi-channel communication, powering the ABARE ecosystem.
+A next-generation Holding Company DAO built on Solana, managing a portfolio of AI-driven brands through decentralized governance and multi-channel communication.
 
 [![Solana](https://img.shields.io/badge/Solana-Platform-blue)](https://solana.com/)
 [![Security: Audited](https://img.shields.io/badge/Security-Audited-green.svg)](docs/security-audit.md)
@@ -16,20 +15,21 @@ A next-generation DAO built on Solana with AI-driven governance and multi-channe
 
 ## Overview
 
-Sadellari DAO represents a new paradigm in decentralized autonomous organizations, combining:
+Sadellari DAO represents a new paradigm in decentralized holding companies, combining:
 - High-performance Solana blockchain infrastructure
 - AI-driven governance with four core agents:
-  * CEO Agent: Strategic decision making
-  * CFO Agent: Financial oversight
-  * CTO Agent: Technical validation
+  * CEO Agent: Strategic decision making and portfolio management
+  * CFO Agent: Financial oversight and investment strategy
+  * CTO Agent: Technical validation and infrastructure
   * CLO Agent: Legal compliance and governance
 - Multi-channel communication (Slack + Email)
 - Advanced tokenomics with 30/25/20/15/10 distribution
 
-## ABARE Integration
+## Brand Portfolio
 
-ABARE serves as our flagship brand and core integration, demonstrating the full potential of the Sadellari DAO ecosystem:
-- Decentralized decision-making for brand operations
+### ABARE (Flagship Brand)
+ABARE serves as our flagship brand and core portfolio asset, demonstrating the full potential of our holding company structure:
+- Decentralized brand management and operations
 - AI-driven market analysis and strategy
 - Automated compliance and legal oversight
 - Real-time financial management
@@ -130,10 +130,10 @@ sadellari-dao/
 - Brand integration capabilities
 
 ### AI Agents
-- CEO Agent: Strategic decision making
-- CFO Agent: Financial oversight
-- CTO Agent: Technical validation
-- CLO Agent: Legal compliance
+- CEO Agent: Strategic decision making and portfolio management
+- CFO Agent: Financial oversight and investment strategy
+- CTO Agent: Technical validation and infrastructure
+- CLO Agent: Legal compliance and governance
 - Consensus-based decision pipeline
 
 ### Frontend
