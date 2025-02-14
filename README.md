@@ -1,9 +1,3 @@
-____    _    ____  _____ _     _        _    ____  ___    ____    _    ___  
-/ ___|  / \  |  _ \| ____| |   | |      / \  |  _ \|_ _|  |  _ \  / \  / _ \ 
-\___ \ / _ \ | | | |  _| | |   | |     / _ \ | |_) || |   | | | |/ _ \| | | |
- ___) / ___ \| |_| | |___| |___| |___ / ___ \|  _ < | |   | |_| / ___ \ |_| |
-|____/_/   \_\____/|_____|_____|_____/_/   \_\_| \_\___|  |____/_/   \_\___/ 
-
 # Sadellari DAO
 
 A next-generation Holding Company DAO built on Solana, managing a portfolio of AI-driven brands through decentralized governance and multi-channel communication.
